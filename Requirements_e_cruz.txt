@@ -1,0 +1,27 @@
+Erixen Cruz ec622@drexel.edu
+13 March 2019
+
+Stateful:
+The client and server both keep track of the state that the conversation is in
+through a state variable. Messages are checked to make sure that they are for
+the appropriate state. If the message is inappropriate, it is discarded and
+the connection is closed.
+
+Concurrent:
+The server uses the multiprocessing library to be able to handle multiple
+clients simultaneously. Each client request is given a process which serves
+it. 
+
+Service:
+The server listens on 8492 and the client also defaults to ping there.
+
+Client:
+The user can specify the IP address of the server or hostname. The python
+socket library deals with both automatically. The user gives it to the protocol
+on the command line
+
+UI:
+The user interacts with the client application protocol through the command line.
+
+Extra credit:
+I did not attempt the extra credit.

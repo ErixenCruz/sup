@@ -1,0 +1,29 @@
+{
+	
+	"windows":{
+		"softVer": "1.2",
+		"loc": "windows1.2",
+		"prevVersions": [
+			"1.0",
+			"1.2"
+		],
+		"isFragmented": true 
+	},
+	"linux":{
+		"softVer": "1.1",
+		"loc": "linux1.1.exe",
+		"prevVersions": [
+			"1.0",
+			"1.1"
+		],
+		"isFragmented": false
+	},
+	"mac":{
+		"softVer": "1.3",
+		"loc": "mac1.3.exe",
+		"prevVersions": [
+			"1.0",
+			"1.3"
+		]
+	}
+}
