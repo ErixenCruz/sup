@@ -2,6 +2,10 @@
 Erixen Cruz ec622@drexel.edu
 13 March 2020
 
+This was all developed on Python 3.6.9 on Ubuntu 18.04.4.
+
+VIDEO: https://www.youtube.com/watch?v=UmsbYQXFAnI&feature=youtu.be
+
 The server and client are implemented in server.py and client.py. To use
 openssl, I followed https://carlo-hamalainen.net/2013/01/24/python-ssl-socket-echo-test-with-self-signed-certificate/.
 The certificate and keys I created are included here as server.crt, server.csr,

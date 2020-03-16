@@ -13,9 +13,10 @@ from shutil import disk_usage
 import argparse
 
 supVer = '1.0'
-port = 8492
+port = cf.port
 bogusKey = '123' # for testing
 buffMax = 4096 # maximum message size in bytes
+maxField=cf.maxField
 
 ''' Hard coded user input used for testing and debugging
 opSys = 'linux'
@@ -61,7 +62,7 @@ try:
             state = 'updating'
         else:
             # create the message to ping server for updates and move to "checking" state
-            msg = cf.encode(' '.join([prodKey,softVer,opSys,supVer])+cf.crlf) 
+            msg = cf.encode(' '.join([prodKey,softVer,opSys,supVer])) 
             #msg = cf.encode(' '.join([bogusKey,softVer,opSys,supVer])) 
             state = 'checking'
 
@@ -70,19 +71,42 @@ try:
             checkReply = cf.decode(s.recv(1024))
             if checkReply =='': # Connection closed by server, no updates
                 s.close()
-            elif checkReply.strip() == '0': # invalid product key
-                print('The key is invalid!')
-                state='idle'
             else: # move to space check
-                servSupVer,upSize = checkReply.split(' ')
+                fields=checkReply.split(' ')
+                if len(fields)!=2:
+                # Invalid message
+                    s.close()
+                    exit()
+                # Check that the number of characters in each field is below
+                #  the maximum.
+                for field in fields:
+                    if len(field)>maxField:
+                        s.close()
+                        exit()
+                servSupVer,upSize = fields
+                # For now, the server could and client must be running SUP 1.0
+                if servSupVer!='1.0':
+                # In valid response
+                    s.close()
+                    exit()
+                try:
+                    upSize=float(upSize)
+                except ValueError:
+                # The second field is not a float. Invalid message.
+                    s.close()
+                    exit()
+
+
                 state = 'space check'
                 # find free space
                 _,_,freeSpace = disk_usage('/')
                 freeSpace /= 10.**6. # convert to megabytes
                 #freeSpace=0.
-                if freeSpace<float(upSize): # not enough disk space for update
+                if freeSpace<upSize: # not enough disk space for update
                     msg = s.send(cf.encode(' '.join([prodKey,'0'])))
                     state = 'idle'
+                    s.close()
+                    exit()
                 else:
                     #print('We have the space for the update.')
                     msg = s.send(cf.encode(' '.join([prodKey,'1'])))
@@ -106,6 +130,7 @@ try:
                     # Chunk receipt ack
                     s.send(updateMsg[:1]+b'\x01')
                     updateMsg=s.recv(buffMax)
+                    # Slow down the download for testing and pausing purposes.
                     sleep(1)
                         
             except KeyboardInterrupt: # user wants to pause download
@@ -117,7 +142,6 @@ try:
                 exit()
             state = 'update termination'
             s.send(cf.encode(' '.join([prodKey,'update done'])))
-            s.close()
             state = 'idle'
 finally:
     s.close()

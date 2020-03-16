@@ -3,6 +3,8 @@
 
 
 crlf='\r\n'
+port = 8492
+maxField=12
 def encode(string):
     '''
     encode - Takes a string and encodes it into binary using ASCII

@@ -1,6 +1,9 @@
 Erixen Cruz ec622@drexel.edu
 13 March 2019
 
+Video:
+https://www.youtube.com/watch?v=UmsbYQXFAnI&feature=youtu.be
+
 Stateful:
 The client and server both keep track of the state that the conversation is in
 through a state variable. Messages are checked to make sure that they are for
